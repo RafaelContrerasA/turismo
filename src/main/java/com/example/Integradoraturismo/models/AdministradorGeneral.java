@@ -1,4 +1,4 @@
-package com.example.Integradoraturismo.model;
+package com.example.Integradoraturismo.models;
 
 import jakarta.persistence.*;
 
@@ -8,7 +8,7 @@ public class AdministradorGeneral {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id; 
+    private int id;
     public void gestionarCuentas() {
     
     }

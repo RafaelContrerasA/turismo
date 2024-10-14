@@ -1,4 +1,4 @@
-package com.example.Integradoraturismo.model;
+package com.example.Integradoraturismo.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
