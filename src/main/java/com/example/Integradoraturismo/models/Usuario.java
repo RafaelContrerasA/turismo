@@ -1,32 +1,47 @@
 package com.example.Integradoraturismo.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "usuarios")
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
+    @NotBlank(message = "El nombre no puede estar vacío.")
     @Column(nullable = false)
     private String nombre;
 
+    @NotBlank(message = "El email no puede estar vacío.")
+    @Email(message = "El email debe ser válido.")
     @Column(nullable = false, unique = true)
     private String email;
 
+    @NotBlank(message = "El teléfono no puede estar vacío.")
     @Column(nullable = false)
     private String telefono;
 
     @Column(name = "es_staff")
     private boolean esStaff;
 
-    public int getId() {
+    // Getters y setters
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) { // Cambié el tipo a long para que coincida con la declaración
         this.id = id;
     }
 
