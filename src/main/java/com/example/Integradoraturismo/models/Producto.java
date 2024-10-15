@@ -1,11 +1,6 @@
 package com.example.Integradoraturismo.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "producto")
@@ -13,37 +8,37 @@ public class Producto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;  // Cambiado a Long para consistencia.
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String nombre;
 
-    @Column(name = "desc", nullable = true)
-    private String descrip;
+    @Column(name = "desc", nullable = true, length = 255)
+    private String descripcion;
 
-    @Column(name = "value")
+    @Column(name = "value", nullable = false)
     private float precio;
 
-    @Column(name = "inStock")
+    @Column(name = "inStock", nullable = false)
     private boolean disponibilidad;
 
     // Constructor vacío
     public Producto() {}
 
     // Constructor con parámetros
-    public Producto(String nombre, String descrip, float precio, boolean disponibilidad) {
+    public Producto(String nombre, String descripcion, float precio, boolean disponibilidad) {
         this.nombre = nombre;
-        this.descrip = descrip;
+        this.descripcion = descripcion;
         this.precio = precio;
         this.disponibilidad = disponibilidad;
     }
 
     // Getters y Setters
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -55,12 +50,12 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public String getDescrip() {
-        return descrip;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setDescrip(String descrip) {
-        this.descrip = descrip;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public float getPrecio() {
