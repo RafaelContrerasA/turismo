@@ -1,6 +1,11 @@
 package com.example.Integradoraturismo.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "producto")
@@ -13,7 +18,7 @@ public class Producto {
     @Column(name = "name", nullable = false)
     private String nombre;
 
-    @Column(name = "desc", nullable = true, length = 255)
+    @Column(name = "descripcion", nullable = true, length = 255)
     private String descripcion;
 
     @Column(name = "value", nullable = false)

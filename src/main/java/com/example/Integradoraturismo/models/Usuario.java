@@ -69,7 +69,7 @@ public class Usuario {
         this.telefono = telefono;
     }
 
-    public boolean isEsStaff() {
+    public boolean getEsStaff() {
         return esStaff;
     }
 
