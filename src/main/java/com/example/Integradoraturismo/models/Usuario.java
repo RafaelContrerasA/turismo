@@ -1,8 +1,11 @@
 package com.example.Integradoraturismo.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "usuarios")
 public class Usuario {
 
@@ -10,13 +13,17 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nombre")
+    @NotBlank(message = "El nombre no puede estar vacío.")
+    @Column(nullable = false)
     private String nombre;
 
-    @Column(name = "email", unique = true)
+    @NotBlank(message = "El email no puede estar vacío.")
+    @Email(message = "El email debe ser válido.")
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "telefono")
+    @NotBlank(message = "El teléfono no puede estar vacío.")
+    @Column(nullable = false)
     private String telefono;
 
     @Column(name = "esStaff")
