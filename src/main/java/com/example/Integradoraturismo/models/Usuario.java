@@ -8,25 +8,33 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "nombre")
     private String nombre;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "telefono")
     private String telefono;
 
-    @Column(name = "es_staff")
+    @Column(name = "esStaff")
     private boolean esStaff;
 
-    public int getId() {
+    @ManyToOne
+    @JoinColumn(name = "rol_id") // Llave foránea para Rol
+    private Rol rol;
+
+    // Constructor por defecto
+    public Usuario() {}
+
+    // Getters y Setters
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -54,11 +62,19 @@ public class Usuario {
         this.telefono = telefono;
     }
 
-    public boolean getEsStaff() {
+    public boolean isEsStaff() {
         return esStaff;
     }
 
     public void setEsStaff(boolean esStaff) {
         this.esStaff = esStaff;
+    }
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 }
