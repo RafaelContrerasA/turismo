@@ -1,13 +1,6 @@
 package com.example.Integradoraturismo.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -18,7 +11,7 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @NotBlank(message = "El nombre no puede estar vacío.")
     @Column(nullable = false)
@@ -33,15 +26,22 @@ public class Usuario {
     @Column(nullable = false)
     private String telefono;
 
-    @Column(name = "es_staff")
+    @Column(name = "esStaff")
     private boolean esStaff;
 
-    // Getters y setters
-    public long getId() {
+    @ManyToOne
+    @JoinColumn(name = "rol_id") // Llave foránea para Rol
+    private Rol rol;
+
+    // Constructor por defecto
+    public Usuario() {}
+
+    // Getters y Setters
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) { // Cambié el tipo a long para que coincida con la declaración
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -69,11 +69,19 @@ public class Usuario {
         this.telefono = telefono;
     }
 
-    public boolean getEsStaff() {
+    public boolean isEsStaff() {
         return esStaff;
     }
 
     public void setEsStaff(boolean esStaff) {
         this.esStaff = esStaff;
+    }
+
+    public Rol getRol() {
+        return rol;
+    }
+
+    public void setRol(Rol rol) {
+        this.rol = rol;
     }
 }
