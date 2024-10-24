@@ -1,6 +1,5 @@
 package com.example.Integradoraturismo.config;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,51 +13,27 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    
-    
-    
+
     @Autowired
-	AuthenticationSuccessHandler successHandler;
-    
+    AuthenticationSuccessHandler successHandler;
+
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-
-//         http.csrf(csrf -> csrf.disable())
-//                 .authorizeHttpRequests(requests -> {
-//                     requests.requestMatchers("/productos/**").authenticated();
-//                     requests.anyRequest().permitAll();})
-//                 .formLogin(login -> login.loginPage("/login").successHandler(successHandler)).csrf(csrf -> csrf.disable())
-//                 .logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login")).oauth2Login(login -> login.loginPage("/login").successHandler(successHandler));
-// return http.build();
-
-
         http
+                .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para facilitar las pruebas
                 .authorizeHttpRequests(authz -> authz
-                                .requestMatchers("/productos/**").authenticated()  // Solo autenticados pueden acceder a /productos
-                                .anyRequest().permitAll()  // Permitir el acceso al resto
+                .requestMatchers("/api/stripe/**").permitAll() // Permitir acceso sin autenticación a Stripe
+                .requestMatchers("/api/reservaciones/**").permitAll() // Permitir a usuarios no autenticados crear reservaciones
+                .requestMatchers("/productos/**").authenticated() // Solo autenticados pueden acceder a /productos
+                .anyRequest().permitAll() // Permitir el acceso al resto de endpoints
                 )
-                .oauth2Login(login -> login.successHandler(successHandler));  // Habilitar autenticación con OAuth2
+                .oauth2Login(login -> login.successHandler(successHandler)); // Habilitar autenticación con OAuth2
 
-    return http.build();
-
-
-
-
-
-                
+        return http.build();
     }
 
-    // @Bean
-    // public AuthenticationSuccessHandler authenticationSuccessHandler() {
-    //     return new CustomAuthenticationSuccessHandler();
-    // }
-
-    
 }
