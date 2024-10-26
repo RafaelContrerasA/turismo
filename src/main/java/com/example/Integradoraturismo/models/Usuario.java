@@ -21,6 +21,9 @@ public class Usuario {
     @Email(message = "El email debe ser válido.")
     @Column(nullable = false, unique = true)
     private String email;
+    
+    @Column(nullable = true)
+    private String password;
 
     @NotBlank(message = "El teléfono no puede estar vacío.")
     @Column(nullable = false)
@@ -59,6 +62,14 @@ public class Usuario {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+    
+    public String getPassword() {
+        return password;
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getTelefono() {
