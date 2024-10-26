@@ -8,8 +8,11 @@ import java.util.List;
 
 @Repository
 public interface CalificacionRepository extends JpaRepository<Calificacion, Long> {
-
-    // Método para encontrar calificaciones por producto
+    
+    // Métodos para encontrar calificaciones según producto y servicio
     List<Calificacion> findByProductoId(Long productoId);
+    
+    // Métodos para encontrar calificaciones de empresa donde haya un producto o servicio
+    List<Calificacion> findByEmpresaIdAndProductoIsNotNull(Long empresaId);
+    List<Calificacion> findByEmpresaIdAndServicioIsNotNull(Long empresaId);
 }
-

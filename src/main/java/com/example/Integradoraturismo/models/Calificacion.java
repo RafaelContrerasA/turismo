@@ -15,6 +15,7 @@ public class Calificacion {
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
+    // Opcionalmente puedes añadir Servicio o Usuario según se requiera
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
@@ -59,4 +60,3 @@ public class Calificacion {
     public LocalDateTime getFecha() { return fecha; }
     public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
 }
-

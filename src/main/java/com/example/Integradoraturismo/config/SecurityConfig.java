@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,18 +20,14 @@ import com.example.Integradoraturismo.auth.CustomOAuth2UserService;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final CustomOAuth2UserService customOAuth2UserService;
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
 
     @Autowired
     private CustomAuthoritiesMapper customAuthoritiesMapper;
 
     @Autowired
     private AuthenticationSuccessHandler successHandler;
-
-    @Autowired
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
-        this.customOAuth2UserService = customOAuth2UserService;
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -41,30 +36,28 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        
         http
-        .authorizeHttpRequests(authz -> authz
-            .requestMatchers("/productos/**").hasRole("CLIENTE")
-            .anyRequest().permitAll()
-        )
-        .formLogin(Customizer.withDefaults()
-              // Página personalizada de log
-        )
-        .oauth2Login(oauth2 -> oauth2
-            .userInfoEndpoint(userInfo -> 
-                userInfo.userService(customOAuth2UserService)
-                .userAuthoritiesMapper(customAuthoritiesMapper)
+            .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para pruebas
+            .authorizeHttpRequests(authz -> authz
+                .requestMatchers("/api/stripe/**").permitAll() // Acceso libre a Stripe
+                .requestMatchers("/api/reservaciones/**").permitAll() // Acceso libre a reservaciones
+                .requestMatchers("/productos/**").hasRole("CLIENTE") // Solo clientes pueden acceder a productos
+                .anyRequest().permitAll() // Acceso libre a otros endpoints
             )
-            .successHandler(successHandler)
-        )
-        .csrf(csrf -> csrf.disable());
-    return http.build();
+            .formLogin(formLogin -> formLogin.defaultSuccessUrl("/loginSuccess", true)) // Redirección personalizada tras login
+            .oauth2Login(oauth2 -> oauth2
+                .userInfoEndpoint(userInfo -> 
+                    userInfo.userService(customOAuth2UserService)
+                            .userAuthoritiesMapper(customAuthoritiesMapper)
+                )
+                .successHandler(successHandler) // Manejo de éxito en OAuth2
+            );
+
+        return http.build();
     }
-    
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
-    
 }
