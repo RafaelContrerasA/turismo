@@ -28,10 +28,9 @@
         <url />
     </scm>
     <properties>
-        <java.version>23</java.version>
+        <java.version>21</java.version>
     </properties>
     <dependencies>
-        <!-- Dependencias Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -56,7 +55,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        
         <!-- Dependencias agregadas para validaciones -->
         <dependency>
             <groupId>jakarta.validation</groupId>
@@ -71,7 +69,6 @@
             <artifactId>javax.el</artifactId>
             <version>3.0.0</version> <!-- Necesaria para el soporte de EL en las validaciones -->
         </dependency>
-
         <!-- Dependencias para OAuth2, seguridad y webjars -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -81,6 +78,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
@@ -95,6 +96,12 @@
             <groupId>org.webjars</groupId>
             <artifactId>webjars-locator-core</artifactId>
         </dependency>
+        <!-- API para pagos -->
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>15.4.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -105,4 +112,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
