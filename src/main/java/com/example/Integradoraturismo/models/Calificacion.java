@@ -1,104 +1,62 @@
 package com.example.Integradoraturismo.models;
 
-import java.util.Date;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "calificaciones")
+@Table(name = "calificacion")
 public class Calificacion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Relación con Producto, una calificación puede pertenecer a un producto
     @ManyToOne
-    @JoinColumn(name = "producto_id")
+    @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
-    // Relación con Servicio, una calificación puede pertenecer a un servicio
+    // Opcionalmente puedes añadir Servicio o Usuario según se requiera
     @ManyToOne
-    @JoinColumn(name = "servicio_id")
-    private Servicio servicio;
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 
-    @Column(name = "comentario")
+    @Column(name = "comentario", nullable = true)
     private String comentario;
 
-    @Column(name = "calificacion", nullable = false)
-    private int calificacion;  // Calificación de 1 a 5, por ejemplo.
+    @Column(name = "valoracion", nullable = false)
+    private int valoracion; // Por ejemplo, de 1 a 5 estrellas
 
     @Column(name = "fecha", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date fecha;
+    private LocalDateTime fecha;
 
     // Constructor vacío
     public Calificacion() {}
 
     // Constructor con parámetros
-    public Calificacion(Producto producto, Servicio servicio, String comentario, int calificacion, Date fecha) {
+    public Calificacion(Producto producto, Usuario usuario, String comentario, int valoracion, LocalDateTime fecha) {
         this.producto = producto;
-        this.servicio = servicio;
+        this.usuario = usuario;
         this.comentario = comentario;
-        this.calificacion = calificacion;
+        this.valoracion = valoracion;
         this.fecha = fecha;
     }
 
     // Getters y Setters
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Producto getProducto() { return producto; }
+    public void setProducto(Producto producto) { this.producto = producto; }
 
-    public Producto getProducto() {
-        return producto;
-    }
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 
-    public void setProducto(Producto producto) {
-        this.producto = producto;
-    }
+    public String getComentario() { return comentario; }
+    public void setComentario(String comentario) { this.comentario = comentario; }
 
-    public Servicio getServicio() {
-        return servicio;
-    }
+    public int getValoracion() { return valoracion; }
+    public void setValoracion(int valoracion) { this.valoracion = valoracion; }
 
-    public void setServicio(Servicio servicio) {
-        this.servicio = servicio;
-    }
-
-    public String getComentario() {
-        return comentario;
-    }
-
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
-    }
-
-    public int getCalificacion() {
-        return calificacion;
-    }
-
-    public void setCalificacion(int calificacion) {
-        this.calificacion = calificacion;
-    }
-
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
+    public LocalDateTime getFecha() { return fecha; }
+    public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
 }

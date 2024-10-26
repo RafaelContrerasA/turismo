@@ -7,16 +7,29 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import com.example.Integradoraturismo.auth.CustomAuthoritiesMapper;
+import com.example.Integradoraturismo.auth.CustomOAuth2UserService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Autowired
-    AuthenticationSuccessHandler successHandler;
+    private CustomOAuth2UserService customOAuth2UserService;
 
+    @Autowired
+    private CustomAuthoritiesMapper customAuthoritiesMapper;
+
+    @Autowired
+    private AuthenticationSuccessHandler successHandler;
+
+    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
@@ -24,16 +37,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para facilitar las pruebas
-                .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/stripe/**").permitAll() // Permitir acceso sin autenticación a Stripe
-                .requestMatchers("/api/reservaciones/**").permitAll() // Permitir a usuarios no autenticados crear reservaciones
-                .requestMatchers("/productos/**").authenticated() // Solo autenticados pueden acceder a /productos
-                .anyRequest().permitAll() // Permitir el acceso al resto de endpoints
+            .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para pruebas
+            .authorizeHttpRequests(authz -> authz
+                .requestMatchers("/api/stripe/**").permitAll() // Acceso libre a Stripe
+                .requestMatchers("/api/reservaciones/**").permitAll() // Acceso libre a reservaciones
+                .requestMatchers("/productos/**").hasRole("CLIENTE") // Solo clientes pueden acceder a productos
+                .anyRequest().permitAll() // Acceso libre a otros endpoints
+            )
+            .formLogin(formLogin -> formLogin.defaultSuccessUrl("/loginSuccess", true)) // Redirección personalizada tras login
+            .oauth2Login(oauth2 -> oauth2
+                .userInfoEndpoint(userInfo -> 
+                    userInfo.userService(customOAuth2UserService)
+                            .userAuthoritiesMapper(customAuthoritiesMapper)
                 )
-                .oauth2Login(login -> login.successHandler(successHandler)); // Habilitar autenticación con OAuth2
+                .successHandler(successHandler) // Manejo de éxito en OAuth2
+            );
 
         return http.build();
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
