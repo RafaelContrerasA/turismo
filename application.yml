@@ -1,0 +1,26 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          azure-dev:
+            client-id: 7f57ad31-b24d-4565-b370-e23205e2af4a
+            client-secret: yN28Q~j1~QkmJEHn5dDuP2VSOeRs5k5JK5.uLbQJ
+            provider: azure
+            scope: openid, profile, email 
+            client-name: "Microsoft"
+          google:
+            client-id: 760953923348-gotu4r8hqqv0sftdi54o2djk59mj05ms.apps.googleusercontent.com
+            client-secret: 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
+          # github:
+          #   clientId: Ov23liUIHj3wS6EsNfSf
+          #   clientSecret: e655275c158820b23c1b80f63efb983c902b0d38
+          #   scope: profile, email, name
+        provider:
+          azure:
+            issuer-uri: https://login.microsoftonline.com/3db1f987-edf3-43db-88eb-43a0395f7c84/v2.0
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
