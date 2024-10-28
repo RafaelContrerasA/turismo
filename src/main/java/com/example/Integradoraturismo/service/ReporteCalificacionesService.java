@@ -36,7 +36,7 @@ public class ReporteCalificacionesService {
             List<Calificacion> calificaciones = entry.getValue();
 
             double promedio = calificaciones.stream()
-                    .mapToInt(Calificacion::getCalificacion)
+                    .mapToInt(Calificacion::getValoracion) // Cambiado a getValoracion
                     .average()
                     .orElse(0.0);
 
@@ -60,7 +60,7 @@ public class ReporteCalificacionesService {
             List<Calificacion> calificaciones = entry.getValue();
 
             double promedio = calificaciones.stream()
-                    .mapToInt(Calificacion::getCalificacion)
+                    .mapToInt(Calificacion::getValoracion) // Cambiado a getValoracion
                     .average()
                     .orElse(0.0);
 
@@ -74,4 +74,3 @@ public class ReporteCalificacionesService {
         return reportes;
     }
 }
-
