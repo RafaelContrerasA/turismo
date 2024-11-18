@@ -107,6 +107,22 @@
             <artifactId>stripe-java</artifactId>
             <version>15.4.0</version>
         </dependency>
+        
+        <!-- Ahorrarse setters y getters -->
+        <dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+        
+        <!-- Conseguir Dtos -->
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+        
+        
     </dependencies>
 
     <build>
