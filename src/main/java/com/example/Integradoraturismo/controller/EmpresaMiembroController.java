@@ -21,18 +21,17 @@ import com.example.Integradoraturismo.models.EmpresaMiembro;
 import com.example.Integradoraturismo.repository.EmpresaMiembroRepository;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/")
 @Validated
+@RequiredArgsConstructor
 public class EmpresaMiembroController {
 
     private final EmpresaMiembroRepository empresaMiembroRepository;
 
     // Constructor para inyectar el repositorio
-    public EmpresaMiembroController(EmpresaMiembroRepository empresaMiembroRepository) {
-        this.empresaMiembroRepository = empresaMiembroRepository;
-    }
 
     /**
      * Devuelve una lista con todos los registros de la tabla Empresa Miembro

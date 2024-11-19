@@ -1,5 +1,6 @@
 package com.example.Integradoraturismo.models;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -30,5 +31,19 @@ public class Carrito {
     private Usuario usuario;
     
     @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CarritoFechaReservacion> reservaciones; //Si pide varias reservaciones al mismo tiempo (3 a la playa, 2 a la feria)
+    private Set<CarritoFechaReservacion> reservaciones = new HashSet<>(); //Si pide varias reservaciones al mismo tiempo (3 a la playa, 2 a la feria)
+    
+    public void limpiarCarrito(){
+        this.reservaciones.clear();
+    }
+    
+    public void agregarFechaReservacion(CarritoFechaReservacion nuevaReservacion){
+        this.reservaciones.add(nuevaReservacion);
+        nuevaReservacion.setCarrito(this);
+    }
+    
+    public void borrarFechaReservacion(CarritoFechaReservacion carritoFechaReservacion){
+        this.reservaciones.remove(carritoFechaReservacion);
+        carritoFechaReservacion.setCarrito(null);
+    }
 }

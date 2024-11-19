@@ -2,6 +2,7 @@ package com.example.Integradoraturismo.models;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.example.Integradoraturismo.enums.EstatusPedido;
@@ -41,7 +42,7 @@ public class Pedido {
     private Usuario usuario;
     
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PedidoFechaReservacion> reservaciones; //Si pide varias reservaciones al mismo tiempo (3 a la playa, 2 a la feria)
+    private Set<PedidoFechaReservacion> reservaciones = new HashSet<>(); //Si pide varias reservaciones al mismo tiempo (3 a la playa, 2 a la feria)
     
     
 }

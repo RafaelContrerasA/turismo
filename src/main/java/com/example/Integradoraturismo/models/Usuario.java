@@ -20,7 +20,7 @@ public class Usuario {
     private Long id;
 
     @NotBlank(message = "El nombre no puede estar vacío.")
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String nombre;
 
     @NotBlank(message = "El email no puede estar vacío.")
@@ -32,7 +32,7 @@ public class Usuario {
     private String password;
 
     @NotBlank(message = "El teléfono no puede estar vacío.")
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String telefono;
 
     private boolean esStaff;

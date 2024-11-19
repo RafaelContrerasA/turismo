@@ -6,7 +6,6 @@ import lombok.Data;
 public class CarritoFechaReservacionDto {
     private Long id;
     private int cantidad;
-    private CarritoDto carrito;
     private FechaReservacionDto fechaReservacion;
 
 }
