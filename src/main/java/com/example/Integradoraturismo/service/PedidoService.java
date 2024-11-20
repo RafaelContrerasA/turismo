@@ -1,6 +1,5 @@
 package com.example.Integradoraturismo.service;
 
-import com.example.Integradoraturismo.dto.CarritoDto;
 import com.example.Integradoraturismo.dto.PedidoDto;
 import com.example.Integradoraturismo.enums.EstatusPedido;
 import com.example.Integradoraturismo.models.Carrito;

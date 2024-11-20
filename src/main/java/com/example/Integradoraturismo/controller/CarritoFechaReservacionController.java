@@ -1,13 +1,10 @@
 package com.example.Integradoraturismo.controller;
 
 
-import com.example.Integradoraturismo.dto.CarritoFechaReservacionDto;
 import com.example.Integradoraturismo.exception.ResourceNotFoundException;
 import com.example.Integradoraturismo.models.Carrito;
-import com.example.Integradoraturismo.models.CarritoFechaReservacion;
 import com.example.Integradoraturismo.models.Usuario;
 import com.example.Integradoraturismo.repository.UsuarioRepository;
-import com.example.Integradoraturismo.repository.UsuariosRepository;
 import com.example.Integradoraturismo.response.ApiResponse;
 import com.example.Integradoraturismo.service.CarritoFechaReservacionService;
 import com.example.Integradoraturismo.service.CarritoService;
@@ -15,12 +12,9 @@ import com.example.Integradoraturismo.service.UsuarioService;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
