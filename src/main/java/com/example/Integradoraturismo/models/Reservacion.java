@@ -26,8 +26,10 @@ public class Reservacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
+    private String nombre;
     private String descripcion;
+    private String lugar;
     private BigDecimal precio;
     
     @OneToMany(mappedBy = "reservacion", cascade = CascadeType.ALL, orphanRemoval = true)
