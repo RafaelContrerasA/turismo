@@ -1,27 +1,31 @@
 package com.example.Integradoraturismo.config;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import com.example.Integradoraturismo.auth.CustomAuthoritiesMapper;
-import com.example.Integradoraturismo.auth.CustomOAuth2UserService;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
+    //Bean para model mapper
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
 
-    @Autowired
-    private CustomOAuth2UserService customOAuth2UserService;
 
     @Autowired
     private CustomAuthoritiesMapper customAuthoritiesMapper;
@@ -41,14 +45,13 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/api/stripe/**").permitAll() // Acceso libre a Stripe
                 .requestMatchers("/api/reservaciones/**").permitAll() // Acceso libre a reservaciones
-                .requestMatchers("/productos/**").hasRole("CLIENTE") // Solo clientes pueden acceder a productos
+                .requestMatchers("/ruuta/**").hasRole("CLIENTE") // Solo clientes pueden acceder a productos
                 .anyRequest().permitAll() // Acceso libre a otros endpoints
             )
-            .formLogin(formLogin -> formLogin.defaultSuccessUrl("/loginSuccess", true)) // Redirección personalizada tras login
+            .formLogin(formLogin -> formLogin.defaultSuccessUrl("/index.html", true)) // Redirección personalizada tras login
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfo -> 
-                    userInfo.userService(customOAuth2UserService)
-                            .userAuthoritiesMapper(customAuthoritiesMapper)
+                    userInfo.userAuthoritiesMapper(customAuthoritiesMapper)
                 )
                 .successHandler(successHandler) // Manejo de éxito en OAuth2
             );

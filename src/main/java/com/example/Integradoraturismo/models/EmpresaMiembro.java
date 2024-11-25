@@ -1,47 +1,43 @@
 package com.example.Integradoraturismo.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.List;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "empresa_miembro")
-public class EmpresaMiembro extends Usuario {
+public class EmpresaMiembro {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @NotBlank(message = "La dirección no puede estar vacía.")
-    @Column(name = "address", nullable = false) // Agrega nullable = false si es un campo requerido
-    private String direccion;
+    // @NotBlank(message = "La dirección no puede estar vacía.")
+    // @Column(nullable = false)
+    private String nombre;
+    private String correo;
+    private String telefono;
 
-    // Default constructor
-    public EmpresaMiembro() {}
+    // Relación con los usuarios asociados a la empresa
+    @OneToMany(mappedBy = "empresaMiembro", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Usuario> usuarios;
+    
+    // Servicios que ofrece la empresa
+    @OneToMany(mappedBy = "empresaMiembro", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservacion> reservacion;
 
-    // Parameterized constructor
-    public EmpresaMiembro(String nombre, String direccion, String email, String telefono) {
-        super.setNombre(nombre);
-        super.setEmail(email);
-        super.setTelefono(telefono);
-        this.direccion = direccion;
-    }
-
-    // Getters y setters
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
+    // Productos que ofrece la empresa
+    @OneToMany(mappedBy = "empresaMiembro", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Producto> productos;
 
 
-    public void setId(long id) {
-        this.id = id;
-    }
 }
