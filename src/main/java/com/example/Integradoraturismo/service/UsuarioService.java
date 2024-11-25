@@ -65,6 +65,9 @@ public class UsuarioService {
         usuario.setTelefono(telefono);
         usuario.setPassword(passwordEncoder.encode(password)); // Encriptar la contraseña
         usuario.setRol(rol);
+        usuario.setRegistrado(true);
+        usuario.setEsStaff(false);
+        usuario.setEmpresaMiembro(null);
         return usuariosRepository.save(usuario);
     }
 

@@ -13,6 +13,6 @@ public class ReservacionDto {
     private String lugar;
     private BigDecimal precio;
     private List<ImagenDto> imagenes;
+    private EmpresaMiembroDto empresaMiembro;
 
-    // Getters y setters
 }

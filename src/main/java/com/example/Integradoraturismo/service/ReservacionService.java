@@ -1,6 +1,8 @@
 package com.example.Integradoraturismo.service;
 
 import com.example.Integradoraturismo.dto.ReservacionDto;
+import com.example.Integradoraturismo.dto.catalogoreservacionesdtos.CatalogoReservacionDto;
+import com.example.Integradoraturismo.dto.ocupacionporreservaciondtos.OcupacionReservacionDto;
 import com.example.Integradoraturismo.exception.ResourceNotFoundException;
 import com.example.Integradoraturismo.models.Reservacion;
 import com.example.Integradoraturismo.repository.ReservacionRepository;
@@ -25,8 +27,8 @@ public class ReservacionService {
         Reservacion reservacion = transformarRequestAReservacion(request);
         return reservacionRepository.save(reservacion);
     }
-    
-    private Reservacion transformarRequestAReservacion(ReservacionCreateRequest request){
+
+    private Reservacion transformarRequestAReservacion(ReservacionCreateRequest request) {
         Reservacion reservacion = new Reservacion();
         reservacion.setDescripcion(request.getDescripcion());
         reservacion.setPrecio(request.getPrecio());
@@ -60,6 +62,30 @@ public class ReservacionService {
     public List<ReservacionDto> convertirTodasLasReservacionesADto(List<Reservacion> reservaciones) {
         return reservaciones.stream()
                 .map(reservacion -> convertirReservacionADto(reservacion))
+                .toList();
+    }
+
+    // La DTO para generar el catalogo para el cliente
+    public CatalogoReservacionDto convertirReservacionACatalogoDto(Reservacion reservacion) {
+        return modelMapper.map(reservacion, CatalogoReservacionDto.class);
+    }
+
+    // La DTO para generar el catalogo para el cliente
+    public List<CatalogoReservacionDto> convertirTodasLasReservacionesACatalogoDto(List<Reservacion> reservaciones) {
+        return reservaciones.stream()
+                .map(reservacion -> convertirReservacionACatalogoDto(reservacion))
+                .toList();
+    }
+
+    // La DTO que se usa si de la reservacion se desea conocer los cupos que se han apartado en cada una
+    public OcupacionReservacionDto convertirReservacionAOcupacionDto(Reservacion reservacion) {
+        return modelMapper.map(reservacion, OcupacionReservacionDto.class);
+    }
+
+    // La DTO que se usa si de la reservacion se desea conocer los cupos que se han apartado en cada una
+    public List<OcupacionReservacionDto> convertirTodasLasReservacionesAOcupacionDto(List<Reservacion> reservaciones) {
+        return reservaciones.stream()
+                .map(reservacion -> convertirReservacionAOcupacionDto(reservacion))
                 .toList();
     }
 }

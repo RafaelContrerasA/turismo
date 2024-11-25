@@ -3,6 +3,8 @@ package com.example.Integradoraturismo.models;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,6 +37,11 @@ public class Reservacion {
     @OneToMany(mappedBy = "reservacion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Imagen> imagenes;
     
-
+    @ManyToOne
+    @JoinColumn(name = "empresa_miembro_id")
+    private EmpresaMiembro empresaMiembro;
+    
+    @OneToMany(mappedBy = "reservacion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FechaReservacion> fechas;
 
 }

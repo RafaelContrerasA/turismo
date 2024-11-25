@@ -1,6 +1,8 @@
 package com.example.Integradoraturismo.controller;
 
 import com.example.Integradoraturismo.dto.ReservacionDto;
+import com.example.Integradoraturismo.dto.catalogoreservacionesdtos.CatalogoReservacionDto;
+import com.example.Integradoraturismo.dto.ocupacionporreservaciondtos.OcupacionReservacionDto;
 import com.example.Integradoraturismo.models.Reservacion;
 import com.example.Integradoraturismo.request.ReservacionCreateRequest;
 import com.example.Integradoraturismo.response.ApiResponse;
@@ -29,19 +31,36 @@ public class ReservacionController {
         return new ResponseEntity<>(new ApiResponse("Reservación creada con éxito", reservacionDto), HttpStatus.CREATED);
     }
 
-    // Obtener todas las reservaciones
+    // Obtener todas las reservaciones (datos simples)
+    // @GetMapping
+    // public ResponseEntity<ApiResponse> obtenerTodasLasReservaciones() {
+    //     List<Reservacion> reservaciones = reservacionService.obtenerTodasLasReservaciones();
+    //     List<ReservacionDto> reservacionDtos = reservacionService.convertirTodasLasReservacionesADto(reservaciones);
+    //     return ResponseEntity.ok(new ApiResponse("success", reservacionDtos));
+    // }
+
+    // // Obtener una reservación por ID (datos simples)
+    // @GetMapping("/{id}")
+    // public ResponseEntity<ApiResponse> obtenerReservacionPorId(@PathVariable Long id) {
+    //     Reservacion reservacion = reservacionService.obtenerReservacionPorId(id);
+    //     ReservacionDto reservacionDto = reservacionService.convertirReservacionADto(reservacion);
+    //     return ResponseEntity.ok(new ApiResponse("success", reservacionDto));
+    // }
+    
+    
+    //Catalogo para el cliente
     @GetMapping
     public ResponseEntity<ApiResponse> obtenerTodasLasReservaciones() {
         List<Reservacion> reservaciones = reservacionService.obtenerTodasLasReservaciones();
-        List<ReservacionDto> reservacionDtos = reservacionService.convertirTodasLasReservacionesADto(reservaciones);
+        List<CatalogoReservacionDto> reservacionDtos = reservacionService.convertirTodasLasReservacionesACatalogoDto(reservaciones);
         return ResponseEntity.ok(new ApiResponse("success", reservacionDtos));
     }
 
-    // Obtener una reservación por ID
+    // Obtener una reservación por ID (datos simples)
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> obtenerReservacionPorId(@PathVariable Long id) {
         Reservacion reservacion = reservacionService.obtenerReservacionPorId(id);
-        ReservacionDto reservacionDto = reservacionService.convertirReservacionADto(reservacion);
+        CatalogoReservacionDto reservacionDto = reservacionService.convertirReservacionACatalogoDto(reservacion);
         return ResponseEntity.ok(new ApiResponse("success", reservacionDto));
     }
 
@@ -50,6 +69,23 @@ public class ReservacionController {
     public ResponseEntity<ApiResponse> eliminarReservacion(@PathVariable Long id) {
         reservacionService.eliminarReservacion(id);
         return ResponseEntity.ok(new ApiResponse("Reservación eliminada con éxito", null));
+    }
+    
+    //Obtener todas las reservaciones con los ocupaciones que se ha comprado de cada una
+    //Falta agregar que saque la empresa de la sesion
+    @GetMapping("/ocupacion")
+    public ResponseEntity<ApiResponse> obtenerTodasLasReservacionesConSuOcupacion() {
+        List<Reservacion> reservaciones = reservacionService.obtenerTodasLasReservaciones();
+        List<OcupacionReservacionDto> reservacionDtos = reservacionService.convertirTodasLasReservacionesAOcupacionDto(reservaciones);
+        return ResponseEntity.ok(new ApiResponse("success", reservacionDtos));
+    }
+    
+    // Obtener una reservación por ID (contiene los lugares apartados por horario)
+    @GetMapping("/ocupacion/{id}")
+    public ResponseEntity<ApiResponse> obtenerReservacionConSuOcupacionPorId(@PathVariable Long id) {
+        Reservacion reservacion = reservacionService.obtenerReservacionPorId(id);
+        OcupacionReservacionDto reservacionDto = reservacionService.convertirReservacionAOcupacionDto(reservacion);
+        return ResponseEntity.ok(new ApiResponse("success", reservacionDto));
     }
 }
 

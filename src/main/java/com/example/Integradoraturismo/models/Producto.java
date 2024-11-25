@@ -27,4 +27,11 @@ public class Producto {
     
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ImagenProducto> imagenes;
+    
+    @ManyToOne
+    @JoinColumn(name = "empresa_miembro_id")
+    private EmpresaMiembro empresaMiembro;
+    
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PedidoProducto> pedidosHechos;
 }

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.Integradoraturismo.models.Rol;
 import com.example.Integradoraturismo.models.Usuario;
 import com.example.Integradoraturismo.repository.RolRepository;
+import com.example.Integradoraturismo.request.RegistroUsuarioRequest;
+import com.example.Integradoraturismo.response.ApiResponse;
 import com.example.Integradoraturismo.service.UsuarioService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -56,10 +58,10 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody Usuario request) {
+    public ResponseEntity<ApiResponse> registerUser(@RequestBody RegistroUsuarioRequest request) {
         Optional<Rol> rolOptional = rolRepository.findByNombre("Cliente");
         if (rolOptional.isEmpty()) {
-            return ResponseEntity.badRequest().body("El rol Cliente no existe.");
+            return ResponseEntity.badRequest().body(new ApiResponse ("El rol Cliente no existe.", null));
         }
 
         Usuario usuario = usuarioService.registrarUsuario(
@@ -69,7 +71,7 @@ public class AuthController {
             request.getPassword(),
             rolOptional.get()
         );
-        return ResponseEntity.ok("Usuario registrado con éxito.");
+        return ResponseEntity.ok(new ApiResponse("Usuario registrado con éxito.", null));
     }
     
     @PostMapping("/login")

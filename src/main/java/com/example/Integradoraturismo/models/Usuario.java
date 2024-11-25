@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
 @NoArgsConstructor // Constructor por defecto
@@ -40,6 +39,10 @@ public class Usuario {
     public void setEsStaff(boolean esStaff) { this.esStaff = esStaff; }
     
     private boolean registrado;
+    
+    @ManyToOne
+    @JoinColumn(name = "empresa_id", nullable = true) // Relación opcional si es Empresa
+    private EmpresaMiembro empresaMiembro;
 
     @ManyToOne
     @JoinColumn(name = "rol_id") // Llave foránea para Rol
