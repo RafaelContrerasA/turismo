@@ -3,10 +3,13 @@ package com.example.Integradoraturismo.controller;
 import com.example.Integradoraturismo.dto.ReservacionDto;
 import com.example.Integradoraturismo.dto.catalogoreservacionesdtos.CatalogoReservacionDto;
 import com.example.Integradoraturismo.dto.ocupacionporreservaciondtos.OcupacionReservacionDto;
+import com.example.Integradoraturismo.models.EmpresaMiembro;
 import com.example.Integradoraturismo.models.Reservacion;
 import com.example.Integradoraturismo.request.ReservacionCreateRequest;
 import com.example.Integradoraturismo.response.ApiResponse;
+import com.example.Integradoraturismo.service.EmpresaMiembroService;
 import com.example.Integradoraturismo.service.ReservacionService;
+import com.example.Integradoraturismo.service.UsuarioService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,11 +25,16 @@ import java.util.List;
 public class ReservacionController {
 
     private final ReservacionService reservacionService;
+    private final UsuarioService usuarioService;
+    private final EmpresaMiembroService empresaMiembroService;
 
     // Crear una nueva reservación
     @PostMapping
     public ResponseEntity<ApiResponse> crearReservacion(@RequestBody ReservacionCreateRequest request) {
-        Reservacion nuevaReservacion = reservacionService.crearReservacion(request);
+        Long empresaId = usuarioService.obtenerIdEmpresaDeUsuarioLogeado();
+        EmpresaMiembro empresa = empresaMiembroService.obtenerEmpresaPorId(empresaId);
+        
+        Reservacion nuevaReservacion = reservacionService.crearReservacion(request, empresa);
         ReservacionDto reservacionDto = reservacionService.convertirReservacionADto(nuevaReservacion);
         return new ResponseEntity<>(new ApiResponse("Reservación creada con éxito", reservacionDto), HttpStatus.CREATED);
     }

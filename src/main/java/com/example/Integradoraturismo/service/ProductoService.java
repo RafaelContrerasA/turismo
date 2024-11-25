@@ -2,6 +2,7 @@ package com.example.Integradoraturismo.service;
 
 import com.example.Integradoraturismo.dto.ProductoDto;
 import com.example.Integradoraturismo.exception.ResourceNotFoundException;
+import com.example.Integradoraturismo.models.EmpresaMiembro;
 import com.example.Integradoraturismo.models.Producto;
 import com.example.Integradoraturismo.repository.ProductoRepository;
 import com.example.Integradoraturismo.request.ProductoCreateRequest;
@@ -22,8 +23,9 @@ public class ProductoService {
     private final ModelMapper modelMapper;
 
     // Crear un nuevo producto
-    public Producto crearProducto(ProductoCreateRequest request) {
+    public Producto crearProducto(ProductoCreateRequest request, EmpresaMiembro empresa) {
         Producto producto = transformarRequestAProducto(request);
+        producto.setEmpresaMiembro(empresa);
         return productoRepository.save(producto);
     }
     

@@ -5,7 +5,6 @@ import com.example.Integradoraturismo.exception.ResourceNotFoundException;
 import com.example.Integradoraturismo.models.Carrito;
 import com.example.Integradoraturismo.models.Usuario;
 import com.example.Integradoraturismo.repository.CarritoFechaReservacionRepository;
-import com.example.Integradoraturismo.repository.CarritoProductoRepository;
 import com.example.Integradoraturismo.repository.CarritoRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,6 @@ public class CarritoService {
 
     private final CarritoRepository carritoRepository;
     private final CarritoFechaReservacionRepository carritoFechaReservacionRepository;
-    private final CarritoProductoRepository carritoProductoRepository;
     private final ModelMapper modelMapper;
 
     // Obtener todos los carritos

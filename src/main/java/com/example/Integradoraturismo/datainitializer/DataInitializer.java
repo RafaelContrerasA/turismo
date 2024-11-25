@@ -9,9 +9,6 @@ import com.example.Integradoraturismo.repository.RolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-
-import java.util.Optional;
-
 @Component
 public class DataInitializer implements CommandLineRunner {
 

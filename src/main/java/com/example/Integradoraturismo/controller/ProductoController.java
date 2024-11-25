@@ -1,10 +1,13 @@
 package com.example.Integradoraturismo.controller;
 
 import com.example.Integradoraturismo.dto.ProductoDto;
+import com.example.Integradoraturismo.models.EmpresaMiembro;
 import com.example.Integradoraturismo.models.Producto;
 import com.example.Integradoraturismo.request.ProductoCreateRequest;
 import com.example.Integradoraturismo.response.ApiResponse;
+import com.example.Integradoraturismo.service.EmpresaMiembroService;
 import com.example.Integradoraturismo.service.ProductoService;
+import com.example.Integradoraturismo.service.UsuarioService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,11 +23,16 @@ import java.util.List;
 public class ProductoController {
 
     private final ProductoService productoService;
+    private final UsuarioService usuarioService;
+    private final EmpresaMiembroService empresaMiembroService;
 
     // Crear un nuevo producto
     @PostMapping
     public ResponseEntity<ApiResponse> crearProducto(@RequestBody ProductoCreateRequest request) {
-        Producto nuevoProducto = productoService.crearProducto(request);
+        Long idEmpresa = usuarioService.obtenerIdEmpresaDeUsuarioLogeado();
+        EmpresaMiembro empresa = empresaMiembroService.obtenerEmpresaPorId(idEmpresa);
+        
+        Producto nuevoProducto = productoService.crearProducto(request, empresa);
         ProductoDto productoDto = productoService.convertirProductoADto(nuevoProducto);
         return new ResponseEntity<>(new ApiResponse("Producto creado con éxito", productoDto), HttpStatus.CREATED);
     }

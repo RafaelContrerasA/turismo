@@ -4,6 +4,7 @@ import com.example.Integradoraturismo.dto.ReservacionDto;
 import com.example.Integradoraturismo.dto.catalogoreservacionesdtos.CatalogoReservacionDto;
 import com.example.Integradoraturismo.dto.ocupacionporreservaciondtos.OcupacionReservacionDto;
 import com.example.Integradoraturismo.exception.ResourceNotFoundException;
+import com.example.Integradoraturismo.models.EmpresaMiembro;
 import com.example.Integradoraturismo.models.Reservacion;
 import com.example.Integradoraturismo.repository.ReservacionRepository;
 import com.example.Integradoraturismo.request.ReservacionCreateRequest;
@@ -23,8 +24,9 @@ public class ReservacionService {
     private final ModelMapper modelMapper;
 
     // Crear o actualizar una reservación
-    public Reservacion crearReservacion(ReservacionCreateRequest request) {
+    public Reservacion crearReservacion(ReservacionCreateRequest request, EmpresaMiembro empresa) {
         Reservacion reservacion = transformarRequestAReservacion(request);
+        reservacion.setEmpresaMiembro(empresa);
         return reservacionRepository.save(reservacion);
     }
 
