@@ -11,5 +11,8 @@ public class CarritoDto {
     private UsuarioDto usuario;
     //private Long usuarioId;    
     private Set<CarritoFechaReservacionDto> reservaciones;
+    private Set<CarritoProductoDto> productos;    
+    private BigDecimal totalReservaciones;
+    private BigDecimal totalProductos;
     private BigDecimal total;
 }

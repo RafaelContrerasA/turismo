@@ -15,4 +15,5 @@ public class PedidoDto {
     private EstatusPedido estatusPedido;
     private UsuarioDto usuario;
     private Set<PedidoFechaReservacionDto> reservaciones;
+    private Set<PedidoProductoDto> productos;
 }

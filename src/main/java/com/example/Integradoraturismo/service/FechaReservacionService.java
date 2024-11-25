@@ -33,6 +33,7 @@ public class FechaReservacionService {
     public FechaReservacion transformarRequestAFechaReservacion(FechaReservacionCreateRequest request){
         FechaReservacion fechaReservacion = new FechaReservacion();
         fechaReservacion.setCupoDisponible(request.getCupoDisponible());
+        fechaReservacion.setCupoTotal(request.getCupoDisponible());
         fechaReservacion.setFecha(request.getFecha());
         
         Reservacion reservacion = reservacionService.obtenerReservacionPorId(request.getIdReservacion());        

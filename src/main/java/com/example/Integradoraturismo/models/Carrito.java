@@ -33,6 +33,9 @@ public class Carrito {
     @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CarritoFechaReservacion> reservaciones = new HashSet<>(); //Si pide varias reservaciones al mismo tiempo (3 a la playa, 2 a la feria)
     
+    @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CarritoProducto> productos = new HashSet<>(); //Si pide varios productos al mismo tiempo (3 vasijas, 2 lapices)
+    
     public void limpiarCarrito(){
         this.reservaciones.clear();
     }
@@ -45,5 +48,15 @@ public class Carrito {
     public void borrarFechaReservacion(CarritoFechaReservacion carritoFechaReservacion){
         this.reservaciones.remove(carritoFechaReservacion);
         carritoFechaReservacion.setCarrito(null);
+    }
+    
+    public void agregarProducto(CarritoProducto nuevoProducto){
+        this.productos.add(nuevoProducto);
+        nuevoProducto.setCarrito(this);
+    }
+    
+    public void borrarProducto(CarritoProducto carritoProducto){
+        this.productos.remove(carritoProducto);
+        carritoProducto.setCarrito(null);
     }
 }

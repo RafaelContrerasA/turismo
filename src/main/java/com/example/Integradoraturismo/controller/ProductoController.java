@@ -1,50 +1,54 @@
 package com.example.Integradoraturismo.controller;
 
+import com.example.Integradoraturismo.dto.ProductoDto;
 import com.example.Integradoraturismo.models.Producto;
+import com.example.Integradoraturismo.request.ProductoCreateRequest;
+import com.example.Integradoraturismo.response.ApiResponse;
 import com.example.Integradoraturismo.service.ProductoService;
+
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//this should work fine - Vlamidyr
+@RequiredArgsConstructor
 @RestController
-@RequestMapping("/productos")
+@RequestMapping("/api/productos")
 public class ProductoController {
 
     private final ProductoService productoService;
 
-    public ProductoController(ProductoService productoService) {
-        this.productoService = productoService;
-    }
-
+    // Crear un nuevo producto
     @PostMapping
-    public ResponseEntity<Producto> crearProducto(@RequestBody Producto producto) {
-        return ResponseEntity.ok(productoService.crearProducto(producto));
+    public ResponseEntity<ApiResponse> crearProducto(@RequestBody ProductoCreateRequest request) {
+        Producto nuevoProducto = productoService.crearProducto(request);
+        ProductoDto productoDto = productoService.convertirProductoADto(nuevoProducto);
+        return new ResponseEntity<>(new ApiResponse("Producto creado con éxito", productoDto), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Producto> obtenerProducto(@PathVariable Long id) {
-        return productoService.obtenerProducto(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
+    // Obtener todos los productos
     @GetMapping
-    public List<Producto> listarProductos() {
-        return productoService.listarProductos();
+    public ResponseEntity<ApiResponse> obtenerTodosLosProductos() {
+        List<Producto> productos = productoService.obtenerTodosLosProductos();
+        List<ProductoDto> productoDtos = productoService.convertirTodosLosProductosADto(productos);
+        return ResponseEntity.ok(new ApiResponse("success", productoDtos));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Producto> actualizarProducto(
-            @PathVariable Long id, @RequestBody Producto producto) {
-        return ResponseEntity.ok(productoService.actualizarProducto(id, producto));
+    // Obtener un producto por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse> obtenerProductoPorId(@PathVariable Long id) {
+        Producto producto = productoService.obtenerProductoPorId(id);
+        ProductoDto productoDto = productoService.convertirProductoADto(producto);
+        return ResponseEntity.ok(new ApiResponse("success", productoDto));
     }
 
+    // Eliminar un producto por ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarProducto(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse> eliminarProducto(@PathVariable Long id) {
         productoService.eliminarProducto(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(new ApiResponse("Producto eliminado con éxito", null));
     }
 }
-

@@ -1,5 +1,6 @@
 package com.example.Integradoraturismo.models;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -21,15 +22,16 @@ public class Producto {
 
     private String descripcion;
 
-    private float precio;
+    private BigDecimal precio;
 
     private int stock;
     
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ImagenProducto> imagenes;
     
+    
     @ManyToOne
-    @JoinColumn(name = "empresa_miembro_id")
+    @JoinColumn(name = "empresa_miembro_id", nullable = true)
     private EmpresaMiembro empresaMiembro;
     
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -72,7 +72,7 @@ public class ImagenService{
                 savedImage = imageRepository.save(savedImage);
 
                 ImagenDto imageDto = new ImagenDto();
-                imageDto.setImageId(savedImage.getId());
+                imageDto.setId(savedImage.getId());
                 imageDto.setFileName(savedImage.getFileName());
                 imageDto.setFileType(savedImage.getFileType());
                 imageDto.setDownloadUrl(savedImage.getDownloadUrl());
