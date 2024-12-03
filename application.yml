@@ -16,9 +16,9 @@ spring:
           #   clientId: Ov23liUIHj3wS6EsNfSf
           #   clientSecret: e655275c158820b23c1b80f63efb983c902b0d38
           #   scope: profile, email, name
-        provider:
-          azure:
-            issuer-uri: https://login.microsoftonline.com/3db1f987-edf3-43db-88eb-43a0395f7c84/v2.0
+        # provider:
+        #   azure:
+        #     issuer-uri: https://login.microsoftonline.com/3db1f987-edf3-43db-88eb-43a0395f7c84/v2.0
 
 logging:
   level:
