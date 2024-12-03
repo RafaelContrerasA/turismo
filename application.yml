@@ -3,12 +3,12 @@ spring:
     oauth2:
       client:
         registration:
-          azure-dev:
-            client-id: 7f57ad31-b24d-4565-b370-e23205e2af4a
-            client-secret: yN28Q~j1~QkmJEHn5dDuP2VSOeRs5k5JK5.uLbQJ
-            provider: azure
-            scope: openid, profile, email 
-            client-name: "Microsoft"
+          # azure-dev:
+          #   client-id: 7f57ad31-b24d-4565-b370-e23205e2af4a
+          #   client-secret: yN28Q~j1~QkmJEHn5dDuP2VSOeRs5k5JK5.uLbQJ
+          #   provider: azure
+          #   scope: openid, profile, email 
+          #   client-name: "Microsoft"
           google:
             client-id: 760953923348-gotu4r8hqqv0sftdi54o2djk59mj05ms.apps.googleusercontent.com
             client-secret: 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
