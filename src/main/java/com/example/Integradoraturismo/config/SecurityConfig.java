@@ -49,12 +49,13 @@ public class SecurityConfig {
                 .anyRequest().permitAll() // Acceso libre a otros endpoints
             )
             .formLogin(formLogin -> formLogin.defaultSuccessUrl("/index.html", true)) // Redirección personalizada tras login
-            .oauth2Login(oauth2 -> oauth2
-                .userInfoEndpoint(userInfo -> 
-                    userInfo.userAuthoritiesMapper(customAuthoritiesMapper)
-                )
-                .successHandler(successHandler) // Manejo de éxito en OAuth2
-            );
+            // .oauth2Login(oauth2 -> oauth2
+            //     .userInfoEndpoint(userInfo -> 
+            //         userInfo.userAuthoritiesMapper(customAuthoritiesMapper)
+            //     )
+            //     .successHandler(successHandler) // Manejo de éxito en OAuth2
+            // )
+            ;
 
         return http.build();
     }
