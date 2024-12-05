@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .requestMatchers("/ruuta/**").hasRole("CLIENTE") // Solo clientes pueden acceder a productos
                 .anyRequest().permitAll() // Acceso libre a otros endpoints
             )
-            .formLogin(formLogin -> formLogin.defaultSuccessUrl("/index.html", true)) // Redirección personalizada tras login
+            .formLogin(formLogin -> formLogin.defaultSuccessUrl("/logeado.html", true)) // Redirección personalizada tras login
             // .oauth2Login(oauth2 -> oauth2
             //     .userInfoEndpoint(userInfo -> 
             //         userInfo.userAuthoritiesMapper(customAuthoritiesMapper)

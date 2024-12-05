@@ -2,15 +2,18 @@ package com.example.Integradoraturismo.service;
 
 import com.example.Integradoraturismo.dto.PedidoDto;
 import com.example.Integradoraturismo.enums.EstatusPedido;
+import com.example.Integradoraturismo.enums.EstatusTicket;
 import com.example.Integradoraturismo.models.Carrito;
 import com.example.Integradoraturismo.models.Pedido;
 import com.example.Integradoraturismo.models.PedidoProducto;
 import com.example.Integradoraturismo.models.PedidoFechaReservacion;
 import com.example.Integradoraturismo.models.Producto;
+import com.example.Integradoraturismo.models.Ticket;
 import com.example.Integradoraturismo.models.FechaReservacion;
 import com.example.Integradoraturismo.repository.FechaReservacionRepository;
 import com.example.Integradoraturismo.repository.ProductoRepository;
 import com.example.Integradoraturismo.repository.PedidoRepository;
+import java.util.UUID; 
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -37,8 +40,13 @@ public class PedidoService {
     public Pedido hacerPedido(Long UsuarioId) {
         Carrito carrito = carritoService.obtenerCarritoPorIdDeUsuario(UsuarioId);
         Pedido pedido = crearPedido(carrito);
+        
+        //Mapear los datos de las reservaciones y productos y meterlos en listas
         List<PedidoFechaReservacion> listaDeReservaciones = crearListaDeReservaciones(pedido, carrito);
         List<PedidoProducto> listaDeProductos = crearListaDeProductos(pedido, carrito);
+        
+        //Crear los tickets para cada reservacion
+        listaDeReservaciones.forEach(this::generarTicketsParaReservacion);
         
         pedido.setReservaciones(new HashSet<>(listaDeReservaciones));
         pedido.setProductos(new HashSet<>(listaDeProductos));
@@ -106,6 +114,19 @@ public class PedidoService {
             return pedidoProducto;
         }).collect(Collectors.toList());
     }
+    
+    private void generarTicketsParaReservacion(PedidoFechaReservacion pedidoFechaReservacion) {
+    // Generar tantos tickets como la cantidad solicitada
+    for (int i = 0; i < pedidoFechaReservacion.getCantidad(); i++) {
+        Ticket ticket = new Ticket();
+        ticket.setFolio("TUR-"+UUID.randomUUID().toString()); // Generar un folio único
+        ticket.setEstatus(EstatusTicket.VALIDADO);
+        ticket.setPedidoFechaReservacion(pedidoFechaReservacion);
+        
+        // Asociar el ticket a la lista de tickets de la reservación
+        pedidoFechaReservacion.getTickets().add(ticket);
+    }
+}
 
     private BigDecimal calcularCostoTotal(List<PedidoFechaReservacion> listaDeReservaciones, List<PedidoProducto> listaDeProductos) {
         BigDecimal costoDeReservaciones = listaDeReservaciones.stream()

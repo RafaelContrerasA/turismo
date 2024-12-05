@@ -72,7 +72,7 @@ public class PedidoController {
     /**
      * Obtener todos los pedidos (solo administradores).
      */
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    //@PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> obtenerTodosLosPedidos() {
         List<PedidoDto> pedidos = pedidoService.obtenerTodosLosPedidos();

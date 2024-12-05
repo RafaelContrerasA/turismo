@@ -34,7 +34,7 @@ public class CarritoController {
             CarritoDto carritoDto = carritoService.convertirCarritoADto(carrito);
             return ResponseEntity.ok(new ApiResponse("Carrito encontrado", carritoDto));
         } catch (Exception e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Carrito no encontrado: "+e.getMessage(), null));
         }
     }
 
@@ -48,11 +48,11 @@ public class CarritoController {
             carritoService.eliminarCarrito(carrito.getId()); // Implementa este método en el servicio
             return ResponseEntity.ok(new ApiResponse("Carrito eliminado con éxito", null));
         } catch (Exception e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Carrito no encontrado: "+e.getMessage(), null));
         }
     }
     
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    //@PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping("/usuario/{userId}")
     public ResponseEntity<ApiResponse> obtenerCarritoUsuario(@PathVariable Long userId) {
         try {
@@ -65,7 +65,7 @@ public class CarritoController {
     }
 
     // Obtener todos los carritos
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    //@PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> obtenerTodosLosCarritos() {
         List<Carrito> carritos = carritoService.obtenerTodosLosCarritos();
@@ -74,7 +74,7 @@ public class CarritoController {
     }
 
     // Obtener carrito por ID
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    //@PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> obtenerCarritoPorId(@PathVariable Long id) {
         Carrito carrito = carritoService.obtenerCarritoPorId(id);
@@ -83,7 +83,7 @@ public class CarritoController {
     }
 
     // Eliminar carrito por ID
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    //@PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> eliminarCarrito(@PathVariable Long id) {
         try {

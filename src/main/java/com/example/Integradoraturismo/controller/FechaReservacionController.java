@@ -17,7 +17,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/fechas-reservacion")
+@RequestMapping("/fechas-reservacion")
 public class FechaReservacionController {
 
     private final FechaReservacionService fechaReservacionService;
