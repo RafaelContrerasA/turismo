@@ -4,6 +4,7 @@ import com.example.Integradoraturismo.dto.ProductoDto;
 import com.example.Integradoraturismo.models.EmpresaMiembro;
 import com.example.Integradoraturismo.models.Producto;
 import com.example.Integradoraturismo.request.ProductoCreateRequest;
+import com.example.Integradoraturismo.request.ProductoPatchRequest;
 import com.example.Integradoraturismo.response.ApiResponse;
 import com.example.Integradoraturismo.service.EmpresaMiembroService;
 import com.example.Integradoraturismo.service.ProductoService;
@@ -52,6 +53,18 @@ public class ProductoController {
         ProductoDto productoDto = productoService.convertirProductoADto(producto);
         return ResponseEntity.ok(new ApiResponse("success", productoDto));
     }
+    
+    // Actualizar un producto parcialmente
+@PatchMapping("/{id}")
+public ResponseEntity<ApiResponse> actualizarProductoParcialmente(
+        @PathVariable Long id,
+        @RequestBody ProductoPatchRequest request) {
+
+    Producto productoActualizado = productoService.actualizarProductoParcialmente(id, request);
+    ProductoDto productoDto = productoService.convertirProductoADto(productoActualizado);
+    return ResponseEntity.ok(new ApiResponse("Producto actualizado con éxito", productoDto));
+}
+
 
     // Eliminar un producto por ID
     @DeleteMapping("/{id}")

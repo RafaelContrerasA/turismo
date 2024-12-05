@@ -6,6 +6,7 @@ import com.example.Integradoraturismo.dto.ocupacionporreservaciondtos.OcupacionR
 import com.example.Integradoraturismo.models.EmpresaMiembro;
 import com.example.Integradoraturismo.models.Reservacion;
 import com.example.Integradoraturismo.request.ReservacionCreateRequest;
+import com.example.Integradoraturismo.request.ReservacionPatchRequest;
 import com.example.Integradoraturismo.response.ApiResponse;
 import com.example.Integradoraturismo.service.EmpresaMiembroService;
 import com.example.Integradoraturismo.service.ReservacionService;
@@ -71,6 +72,17 @@ public class ReservacionController {
         CatalogoReservacionDto reservacionDto = reservacionService.convertirReservacionACatalogoDto(reservacion);
         return ResponseEntity.ok(new ApiResponse("success", reservacionDto));
     }
+    
+    @PatchMapping("/{id}")
+public ResponseEntity<ApiResponse> actualizarReservacionParcialmente(
+        @PathVariable Long id,
+        @RequestBody ReservacionPatchRequest request) {
+
+    Reservacion reservacionActualizada = reservacionService.actualizarReservacionParcialmente(id, request);
+    ReservacionDto reservacionDto = reservacionService.convertirReservacionADto(reservacionActualizada);
+    return ResponseEntity.ok(new ApiResponse("Reservación actualizada con éxito", reservacionDto));
+}
+
 
     // Eliminar una reservación por ID
     @DeleteMapping("/{id}")

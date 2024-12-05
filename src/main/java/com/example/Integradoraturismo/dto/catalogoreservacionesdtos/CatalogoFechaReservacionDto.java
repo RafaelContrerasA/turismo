@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class CatalogoFechaReservacionDto {
     private Long id;
+    private int cupoTotal;
     private int cupoDisponible;
     private LocalDateTime fecha;
 }

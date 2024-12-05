@@ -7,6 +7,7 @@ import com.example.Integradoraturismo.models.FechaReservacion;
 import com.example.Integradoraturismo.models.Reservacion;
 import com.example.Integradoraturismo.repository.FechaReservacionRepository;
 import com.example.Integradoraturismo.request.FechaReservacionCreateRequest;
+import com.example.Integradoraturismo.request.FechaReservacionPatchRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -51,6 +52,27 @@ public class FechaReservacionService {
     public FechaReservacion obtenerFechaReservacionPorId(Long id) {
         return fechaReservacionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Fecha de reservación no encontrada"));
+    }
+    
+    public FechaReservacion actualizarFechaReservacionParcialmente(Long id, FechaReservacionPatchRequest request) {
+        FechaReservacion fechaReservacion = obtenerFechaReservacionPorId(id);
+
+        if (request.getCupoTotal() != null) {
+            fechaReservacion.setCupoTotal(request.getCupoTotal());
+        }
+        if (request.getCupoDisponible() != null) {
+            fechaReservacion.setCupoDisponible(request.getCupoDisponible());
+        }
+        if (request.getFecha() != null) {
+            fechaReservacion.setFecha(request.getFecha());
+        }
+        if (request.getReservacionId() != null) {
+            Reservacion reservacion = reservacionService.obtenerReservacionPorId(request.getReservacionId());
+            // Aquí se podría buscar y asociar la reservación correspondiente si es necesario.
+            fechaReservacion.setReservacion(reservacion);
+        }
+
+        return fechaReservacionRepository.save(fechaReservacion);
     }
 
     // Eliminar una fecha de reservación

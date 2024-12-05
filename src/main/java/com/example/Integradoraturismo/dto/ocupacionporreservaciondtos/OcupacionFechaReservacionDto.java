@@ -9,7 +9,8 @@ import lombok.Data;
 @Data	
 public class OcupacionFechaReservacionDto {
     private Long id;
-    //private int cupoDisponible;
+    private int cupoTotal;
+    private int cupoDisponible;
     private LocalDateTime fecha;
     private List<OcupacionPedidoFechaReservacionDto> pedidosHechos;
 }

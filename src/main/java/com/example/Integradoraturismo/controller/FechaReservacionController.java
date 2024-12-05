@@ -4,6 +4,7 @@ package com.example.Integradoraturismo.controller;
 import com.example.Integradoraturismo.dto.FechaReservacionDto;
 import com.example.Integradoraturismo.models.FechaReservacion;
 import com.example.Integradoraturismo.request.FechaReservacionCreateRequest;
+import com.example.Integradoraturismo.request.FechaReservacionPatchRequest;
 import com.example.Integradoraturismo.response.ApiResponse;
 import com.example.Integradoraturismo.service.FechaReservacionService;
 
@@ -44,6 +45,17 @@ public class FechaReservacionController {
         FechaReservacion fechaReservacion = fechaReservacionService.obtenerFechaReservacionPorId(id);
         FechaReservacionDto fechaReservacionDto = fechaReservacionService.convertirFechaReservacionADto(fechaReservacion);
         return ResponseEntity.ok(new ApiResponse("success", fechaReservacionDto));
+    }
+    
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse> actualizarFechaReservacionParcialmente(@PathVariable Long id, @RequestBody FechaReservacionPatchRequest request) {
+        try {
+            FechaReservacion fechaReservacionActualizada = fechaReservacionService.actualizarFechaReservacionParcialmente(id, request);
+            FechaReservacionDto fechaReservacionDto = fechaReservacionService.convertirFechaReservacionADto(fechaReservacionActualizada);
+            return ResponseEntity.ok(new ApiResponse("Fecha de reservación actualizada con éxito", fechaReservacionDto));
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));
+        }
     }
 
     // Eliminar una fecha de reservación por ID

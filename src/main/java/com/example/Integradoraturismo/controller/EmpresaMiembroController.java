@@ -1,6 +1,10 @@
 package com.example.Integradoraturismo.controller;
 
+import com.example.Integradoraturismo.dto.EmpresaMiembroDto;
 import com.example.Integradoraturismo.models.EmpresaMiembro;
+import com.example.Integradoraturismo.request.EmpresaMiembroCreateRequest;
+import com.example.Integradoraturismo.request.EmpresaMiembroPatchRequest;
+import com.example.Integradoraturismo.response.ApiResponse;
 import com.example.Integradoraturismo.service.EmpresaMiembroService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,10 +34,31 @@ public class EmpresaMiembroController {
 
     // Crear una nueva empresa miembro
     @PostMapping
-    public ResponseEntity<EmpresaMiembro> crearEmpresa(@RequestBody EmpresaMiembro empresaMiembro) {
-        EmpresaMiembro empresaCreada = empresaMiembroService.crearEmpresa(empresaMiembro);
-        return new ResponseEntity<>(empresaCreada, HttpStatus.CREATED);
+    public ResponseEntity<ApiResponse> crearEmpresa(@RequestBody EmpresaMiembroCreateRequest empresaMiembro) {
+        try {
+            EmpresaMiembro empresaCreada = empresaMiembroService.crearEmpresa(empresaMiembro);
+            EmpresaMiembroDto empresaCreadaDto = empresaMiembroService.convertirEmpresaMiembroADto(empresaCreada);
+            return ResponseEntity.ok(new ApiResponse("success", empresaCreadaDto));
+            
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));
+        }
+        
     }
+    
+    // Actualizar una empresa miembro parcialmente
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse> actualizarEmpresaParcialmente(@PathVariable Long id, @RequestBody EmpresaMiembroPatchRequest request) {
+        try {
+            EmpresaMiembro empresaActualizada = empresaMiembroService.actualizarEmpresaParcialmente(id, request);
+            EmpresaMiembroDto empresaActualizadaDto = empresaMiembroService.convertirEmpresaMiembroADto(empresaActualizada);
+            return ResponseEntity.ok(new ApiResponse("success", empresaActualizadaDto));
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));
+        }
+        
+    }
+
 
     // Actualizar una empresa miembro
     @PutMapping("/{id}")

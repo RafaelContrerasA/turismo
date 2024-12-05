@@ -8,6 +8,7 @@ import com.example.Integradoraturismo.models.EmpresaMiembro;
 import com.example.Integradoraturismo.models.Reservacion;
 import com.example.Integradoraturismo.repository.ReservacionRepository;
 import com.example.Integradoraturismo.request.ReservacionCreateRequest;
+import com.example.Integradoraturismo.request.ReservacionPatchRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +23,7 @@ public class ReservacionService {
 
     private final ReservacionRepository reservacionRepository;
     private final ModelMapper modelMapper;
+    private final EmpresaMiembroService empresaMiembroService;
 
     // Crear o actualizar una reservación
     public Reservacion crearReservacion(ReservacionCreateRequest request, EmpresaMiembro empresa) {
@@ -90,4 +92,27 @@ public class ReservacionService {
                 .map(reservacion -> convertirReservacionAOcupacionDto(reservacion))
                 .toList();
     }
+    
+    public Reservacion actualizarReservacionParcialmente(Long id, ReservacionPatchRequest request) {
+    Reservacion reservacion = obtenerReservacionPorId(id);
+
+    if (request.getNombre() != null) {
+        reservacion.setNombre(request.getNombre());
+    }
+    if (request.getDescripcion() != null) {
+        reservacion.setDescripcion(request.getDescripcion());
+    }
+    if (request.getLugar() != null) {
+        reservacion.setLugar(request.getLugar());
+    }
+    if (request.getPrecio() != null) {
+        reservacion.setPrecio(request.getPrecio());
+    }
+    if (request.getEmpresaMiembroId() != null) {
+        EmpresaMiembro empresaMiembro = empresaMiembroService.obtenerEmpresaPorId(request.getEmpresaMiembroId());
+        reservacion.setEmpresaMiembro(empresaMiembro);
+    }
+
+    return reservacionRepository.save(reservacion);
+}
 }

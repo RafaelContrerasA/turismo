@@ -6,6 +6,7 @@ import com.example.Integradoraturismo.models.EmpresaMiembro;
 import com.example.Integradoraturismo.models.Producto;
 import com.example.Integradoraturismo.repository.ProductoRepository;
 import com.example.Integradoraturismo.request.ProductoCreateRequest;
+import com.example.Integradoraturismo.request.ProductoPatchRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,6 +38,26 @@ public class ProductoService {
         producto.setStock(request.getStock());
         return producto;        
     }
+    
+    public Producto actualizarProductoParcialmente(Long id, ProductoPatchRequest request) {
+    Producto producto = obtenerProductoPorId(id);
+
+    if (request.getNombre() != null) {
+        producto.setNombre(request.getNombre());
+    }
+    if (request.getDescripcion() != null) {
+        producto.setDescripcion(request.getDescripcion());
+    }
+    if (request.getPrecio() != null) {
+        producto.setPrecio(request.getPrecio());
+    }
+    if (request.getStock() != null) {
+        producto.setStock(request.getStock());
+    }
+
+    return productoRepository.save(producto);
+}
+
 
     // Obtener todos los productos
     public List<Producto> obtenerTodosLosProductos() {
