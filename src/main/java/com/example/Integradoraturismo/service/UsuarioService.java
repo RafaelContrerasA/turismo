@@ -1,15 +1,20 @@
 package com.example.Integradoraturismo.service;
 
+import com.example.Integradoraturismo.models.EmpresaMiembro;
 import com.example.Integradoraturismo.models.Rol;
 import com.example.Integradoraturismo.models.Usuario;
 import com.example.Integradoraturismo.repository.RolRepository;
+import com.example.Integradoraturismo.repository.UsuarioRepository;
 import com.example.Integradoraturismo.repository.UsuariosRepository;
+import com.example.Integradoraturismo.request.UsuarioEditarRequest;
 
 import lombok.RequiredArgsConstructor;
 
 import com.example.Integradoraturismo.auth.CustomUserDetails;
+import com.example.Integradoraturismo.dto.UsuarioDto;
 import com.example.Integradoraturismo.exception.ResourceNotFoundException;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -27,7 +33,10 @@ public class UsuarioService {
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final UsuariosRepository usuariosRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final EmpresaMiembroService empresaMiembroService;
     private final RolRepository rolRepository;
+    private final ModelMapper modelMapper;
 
     public Usuario crearUsuario(Usuario usuario) {
         return usuariosRepository.save(usuario);
@@ -50,6 +59,30 @@ public class UsuarioService {
             return usuariosRepository.save(usuario);
         }).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
     }
+    
+
+    
+    public Usuario patchUsuario(Long id, UsuarioEditarRequest request) {
+    return usuarioRepository.findById(id).map(usuario -> {
+        // Actualizar los campos solo si no son null
+        if (request.getEmail() != null) usuario.setEmail(request.getEmail());
+        if (request.getNombre() != null) usuario.setNombre(request.getNombre());
+        if (request.getPassword() != null) usuario.setPassword(passwordEncoder.encode(request.getPassword()));
+        if (request.getTelefono() != null) usuario.setTelefono(request.getTelefono());
+        if (request.getRolId() != null) {
+            Rol rol = rolRepository.findById(request.getRolId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Rol no encontrado con ID: " + request.getRolId()));
+            usuario.setRol(rol);
+        }
+        if (request.getEmpresaId() != null) {
+            EmpresaMiembro empresa = empresaMiembroService.obtenerEmpresaPorId(request.getEmpresaId());                    
+            usuario.setEmpresaMiembro(empresa);
+        }
+        usuario.setEsStaff(request.isEsStaff());
+        usuario.setRegistrado(request.isRegistrado());
+        return usuariosRepository.save(usuario);
+    }).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + id));
+}
 
     public void eliminarUsuario(int id) {
         usuariosRepository.deleteById(id);
@@ -157,6 +190,17 @@ public class UsuarioService {
         }
     
         return usuario.getEmpresaMiembro().getId();
+    }
+    
+        // Métodos para convertir a DTO
+    public UsuarioDto convertirUsuarioADto(Usuario usuario) {
+        return modelMapper.map(usuario, UsuarioDto.class);
+    }
+
+    public List<UsuarioDto> convertirTodosLosUsuariosADto(List<Usuario> usuarios) {
+        return usuarios.stream()
+                .map(usuario -> modelMapper.map(usuario, UsuarioDto.class))
+                .collect(Collectors.toList());
     }
 
 }

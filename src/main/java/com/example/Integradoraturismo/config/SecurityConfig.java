@@ -1,5 +1,6 @@
 package com.example.Integradoraturismo.config;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -25,12 +26,11 @@ import com.example.Integradoraturismo.auth.CustomAuthoritiesMapper;
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-    //Bean para model mapper
+    // Bean para model mapper
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
-
 
     @Autowired
     private CustomAuthoritiesMapper customAuthoritiesMapper;
@@ -39,28 +39,30 @@ public class SecurityConfig {
     private AuthenticationSuccessHandler successHandler;
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para pruebas
-            .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/stripe/**").permitAll() // Acceso libre a Stripe
-                .requestMatchers("/api/reservaciones/**").permitAll() // Acceso libre a reservaciones
-                .requestMatchers("/ruuta/**").hasRole("CLIENTE") // Solo clientes pueden acceder a productos
-                .anyRequest().permitAll() // Acceso libre a otros endpoints
-            )
-            .formLogin(formLogin -> formLogin.defaultSuccessUrl("/logeado.html", true)) // Redirección personalizada tras login
-            // .oauth2Login(oauth2 -> oauth2
-            //     .userInfoEndpoint(userInfo -> 
-            //         userInfo.userAuthoritiesMapper(customAuthoritiesMapper)
-            //     )
-            //     .successHandler(successHandler) // Manejo de éxito en OAuth2
-            // )
-            ;
+                .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para pruebas
+                .authorizeHttpRequests(authz -> authz
+                        .requestMatchers("/api/stripe/**").permitAll() // Acceso libre a Stripe
+                        .requestMatchers("/api/reservaciones/**").permitAll() // Acceso libre a reservaciones
+                        .requestMatchers("/ruuta/**").hasRole("CLIENTE") // Solo clientes pueden acceder a productos
+                        .anyRequest().permitAll() // Acceso libre a otros endpoints
+                )
+                .formLogin(formLogin -> formLogin.defaultSuccessUrl("/logeado.html", true)) // Redirección personalizada
+                                                                                            // tras login
+        // .oauth2Login(oauth2 -> oauth2
+        // .userInfoEndpoint(userInfo ->
+        // userInfo.userAuthoritiesMapper(customAuthoritiesMapper)
+        // )
+        // .successHandler(successHandler) // Manejo de éxito en OAuth2
+        // )
+        ;
 
         return http.build();
     }
@@ -71,16 +73,14 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*")); // Permitir todos los orígenes
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Métodos permitidos
-        configuration.setAllowedHeaders(List.of("*")); // Permitir todos los headers
-        configuration.setAllowCredentials(false); // Cambiar a `true` si necesitas cookies o credenciales
-        
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-    
+
 }
