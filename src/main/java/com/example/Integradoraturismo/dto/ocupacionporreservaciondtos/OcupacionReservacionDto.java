@@ -3,6 +3,7 @@ package com.example.Integradoraturismo.dto.ocupacionporreservaciondtos;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.example.Integradoraturismo.dto.EmpresaMiembroDto;
 import com.example.Integradoraturismo.dto.ImagenDto;
 import com.example.Integradoraturismo.dto.ReviewDto;
 
@@ -18,7 +19,7 @@ public class OcupacionReservacionDto {
     private int totalReviews;
     private float calificacion;
     private List<ImagenDto> imagenes;
-    //private EmpresaMiembroDto empresaMiembro;
+    private EmpresaMiembroDto empresaMiembro;
     private List<OcupacionFechaReservacionDto> fechas;
     private List<ReviewDto> reviews;
 }

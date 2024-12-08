@@ -22,14 +22,26 @@ public class EmpresaMiembroController {
 
     // Obtener todas las empresas miembros
     @GetMapping
-    public List<EmpresaMiembro> obtenerTodasLasEmpresas() {
-        return empresaMiembroService.obtenerTodasLasEmpresas();
+    public ResponseEntity<ApiResponse> obtenerTodasLasEmpresas() {
+        try {
+            List<EmpresaMiembro> empresas = empresaMiembroService.obtenerTodasLasEmpresas();
+            List<EmpresaMiembroDto> empresasDto = empresaMiembroService.convertirTodasLasEmpresasADto(empresas);
+            return ResponseEntity.ok(new ApiResponse("success", empresasDto));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("success", null));
+        }
     }
-
+    
     // Obtener una empresa miembro por su id
     @GetMapping("/{id}")
-    public ResponseEntity<EmpresaMiembro> obtenerEmpresaPorId(@PathVariable Long id) {
-        return new ResponseEntity<>(empresaMiembroService.obtenerEmpresaPorId(id), HttpStatus.OK);
+    public ResponseEntity<ApiResponse> obtenerEmpresaPorId(@PathVariable Long id) {
+        try {
+            EmpresaMiembro empresa = empresaMiembroService.obtenerEmpresaPorId(id);
+            EmpresaMiembroDto empresaDto = empresaMiembroService.convertirEmpresaMiembroADto(empresa);
+            return ResponseEntity.ok(new ApiResponse("success", empresaDto));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("success", null));
+        }
     }
 
     // Crear una nueva empresa miembro
