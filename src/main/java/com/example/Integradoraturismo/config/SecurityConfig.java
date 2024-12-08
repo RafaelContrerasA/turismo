@@ -48,6 +48,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para pruebas
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/stripe/**").permitAll() // Acceso libre a Stripe
                         .requestMatchers("/api/reservaciones/**").permitAll() // Acceso libre a reservaciones
