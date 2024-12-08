@@ -26,6 +26,12 @@ public class Producto {
 
     private int stock;
     
+    @Column(nullable = true)
+    private int totalReviews=0;
+    
+    @Column(nullable = true)
+    private float calificacion=0;
+    
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ImagenProducto> imagenes;
     
@@ -36,4 +42,7 @@ public class Producto {
     
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PedidoProducto> pedidosHechos;
+    
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
 }

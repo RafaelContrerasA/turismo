@@ -1,6 +1,7 @@
 package com.example.Integradoraturismo.models;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -33,6 +34,12 @@ public class Reservacion {
     private String descripcion;
     private String lugar;
     private BigDecimal precio;
+    private String tipoReview;
+    
+    @Column(nullable = true)
+    private int totalReviews=0;
+    @Column(nullable = true)
+    private float calificacion=0;
     
     @OneToMany(mappedBy = "reservacion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Imagen> imagenes;
@@ -43,5 +50,8 @@ public class Reservacion {
     
     @OneToMany(mappedBy = "reservacion", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FechaReservacion> fechas;
+    
+    @OneToMany(mappedBy = "reservacion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
 
 }

@@ -22,16 +22,8 @@ public class EmpresaMiembroController {
 
     // Obtener todas las empresas miembros
     @GetMapping
-    public ResponseEntity<ApiResponse> obtenerTodasLasEmpresas() {
-        try {
-            List<EmpresaMiembro> empresas = empresaMiembroService.obtenerTodasLasEmpresas();
-            List<EmpresaMiembroDto> empresasDto = empresaMiembroService.convertirTodasLasEmpresasADto(empresas);
-            return ResponseEntity.ok(new ApiResponse("success", empresasDto));
-            
-        } catch (Exception e) {
-            return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));
-        }
-        
+    public List<EmpresaMiembro> obtenerTodasLasEmpresas() {
+        return empresaMiembroService.obtenerTodasLasEmpresas();
     }
 
     // Obtener una empresa miembro por su id

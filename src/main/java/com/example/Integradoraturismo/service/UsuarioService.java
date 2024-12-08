@@ -45,7 +45,11 @@ public class UsuarioService {
     public Optional<Usuario> obtenerUsuario(int id) {
         return usuariosRepository.findById(id);
     }
-
+    
+    public Usuario obtenerUsuarioPorId(Long id){
+        return usuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+    }
+    
     public List<Usuario> listarUsuarios() {
         return usuariosRepository.findAll();
     }

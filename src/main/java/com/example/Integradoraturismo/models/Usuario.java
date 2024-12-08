@@ -1,5 +1,7 @@
 package com.example.Integradoraturismo.models;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -47,4 +49,7 @@ public class Usuario {
     @ManyToOne
     @JoinColumn(name = "rol_id") // Llave foránea para Rol
     private Rol rol;
+    
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews;
 }

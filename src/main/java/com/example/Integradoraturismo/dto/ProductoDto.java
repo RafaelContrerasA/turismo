@@ -10,8 +10,12 @@ public class ProductoDto {
     private String nombre;
     private String descripcion;
     private float precio;
-    private int stock;    
-    private List<ImagenProductoDto> imagenes;
+    private int stock;
+    private int totalReviews;
+    private float calificacion;    
     private EmpresaMiembroDto empresaMiembro;
+    private List<ImagenProductoDto> imagenes;
+    private List<ReviewDto> reviews;
+    
 
 }

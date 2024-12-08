@@ -1,7 +1,10 @@
 package com.example.Integradoraturismo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.example.Integradoraturismo.models.Usuario;
 import com.example.Integradoraturismo.request.UsuarioEditarRequest;
@@ -43,6 +46,20 @@ public class UsuariosController {
         Usuario usuario = usuarioService.obtenerUsuario(id)
                 .orElseThrow(() -> new ResourceNotFoundException("El usuario con id " + id + " no se encuentra."));
         return ResponseEntity.ok(usuario);
+    }
+    
+    @PreAuthorize("hasRole('CLIENTE')")
+    @GetMapping("/usuarios/mis-datos")
+    public ResponseEntity<ApiResponse> getUsuarioBySesion() {
+        try {
+            Long id = usuarioService.obtenerIdUsuarioLogeado();
+            Usuario usuario = usuarioService.obtenerUsuarioPorId(id);
+            UsuarioDto usuarioDto = usuarioService.convertirUsuarioADto(usuario);
+            return ResponseEntity.ok(new ApiResponse("success", usuarioDto));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        }
+        
     }
 
     @PutMapping("/usuarios/{id}")
