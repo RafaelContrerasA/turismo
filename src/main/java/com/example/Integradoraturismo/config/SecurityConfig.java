@@ -1,7 +1,6 @@
 package com.example.Integradoraturismo.config;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,25 +11,26 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.example.Integradoraturismo.auth.CustomAuthoritiesMapper;
+import com.example.Integradoraturismo.auth.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
-    // Bean para model mapper
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter; // Filtro de JWT
 
     @Autowired
     private CustomAuthoritiesMapper customAuthoritiesMapper;
@@ -38,41 +38,56 @@ public class SecurityConfig {
     @Autowired
     private AuthenticationSuccessHandler successHandler;
 
+    // Bean para ModelMapper
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
+
+    // Configuración de AuthenticationManager
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    // Configuración de la cadena de filtros de seguridad
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para pruebas
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/stripe/**").permitAll() // Acceso libre a Stripe
-                        .requestMatchers("/api/reservaciones/**").permitAll() // Acceso libre a reservaciones
-                        .requestMatchers("/ruuta/**").hasRole("CLIENTE") // Solo clientes pueden acceder a productos
-                        .anyRequest().permitAll() // Acceso libre a otros endpoints
-                )
-                .formLogin(formLogin -> formLogin.defaultSuccessUrl("/logeado.html", true)) // Redirección personalizada
-                                                                                            // tras login
-        // .oauth2Login(oauth2 -> oauth2
-        // .userInfoEndpoint(userInfo ->
-        // userInfo.userAuthoritiesMapper(customAuthoritiesMapper)
-        // )
-        // .successHandler(successHandler) // Manejo de éxito en OAuth2
-        // )
-        ;
+            .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF para pruebas
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .authorizeHttpRequests(authz -> authz
+                .requestMatchers("/api/stripe/**").permitAll() // Acceso libre a Stripe
+                .requestMatchers("/api/reservaciones/**").permitAll() // Acceso libre a reservaciones
+                .requestMatchers("/ruuta/**").hasRole("CLIENTE") // Solo clientes pueden acceder a productos
+                .anyRequest().permitAll() // Requiere autenticación para otros endpoints
+            )
+            .formLogin(formLogin -> formLogin
+                .loginPage("/login") // Página de inicio de sesión personalizada
+                .defaultSuccessUrl("/index.html", true) // Redirección personalizada tras login
+                .permitAll()
+            )
+            // .oauth2Login(oauth2 -> oauth2
+            //     .userInfoEndpoint(userInfo -> 
+            //         userInfo.userAuthoritiesMapper(customAuthoritiesMapper)
+            //     )
+            //     .successHandler(successHandler) // Manejo de éxito en OAuth2
+            // )
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .sessionManagement(session -> session
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Deshabilitar la creación de sesión
+            ); // Agrega el filtro JWT
 
         return http.build();
     }
 
+    // Configuración de PasswordEncoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // Configuración CORS
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -83,5 +98,4 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 }

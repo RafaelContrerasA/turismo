@@ -3,6 +3,7 @@ package com.example.Integradoraturismo.auth;
 import com.example.Integradoraturismo.models.Usuario;
 import com.example.Integradoraturismo.models.Rol;
 import com.example.Integradoraturismo.repository.UsuariosRepository;
+import com.example.Integradoraturismo.util.JwtUtil;
 import com.example.Integradoraturismo.repository.RolRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,15 @@ import org.springframework.stereotype.Component;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     
@@ -30,10 +35,12 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
-    private UsuariosRepository usuariosRepository;
+    private final UsuariosRepository usuariosRepository;
 
     @Autowired
-    private RolRepository rolRepository;  // Agregamos el RolRepository para consultar los roles
+    private final RolRepository rolRepository;  // Agregamos el RolRepository para consultar los roles
+    
+    private final JwtUtil jwtUtil;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -41,49 +48,56 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                                         Authentication authentication)
             throws IOException, ServletException {
 
-        String redirectUrl = "/";
-        String email = "";
-        String nombre = "";
+                String email = "";
+                String nombre = "";
+                Usuario usuario;
 
         if (authentication.getPrincipal() instanceof DefaultOAuth2User) {
             OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
             email = oauthUser.getAttribute("email");
             nombre = oauthUser.getAttribute("name");
-            
-            
-            //Si es la primera vez que ingresa un usuario lo registra en la base de datos
+
+            // Si el usuario no existe, se registra en la base de datos
             Optional<Usuario> usuarioOptional = usuariosRepository.findByEmail(email);
             if (usuarioOptional.isEmpty()) {
-                // Si el usuario no está en la base de datos, lo guardamos
                 Usuario nuevoUsuario = new Usuario();
                 nuevoUsuario.setNombre(nombre);
                 nuevoUsuario.setEmail(email);
-                nuevoUsuario.setTelefono("empty"); // No se obtiene directamente el teléfono de Google OAuth
-                nuevoUsuario.setEsStaff(false);  // Los usuarios no serán staff por defecto
-                
-                //Dar de alta con contraseña al azar que podra cambiar despues en su perfil
-                String randomPassword = UUID.randomUUID().toString();
-                nuevoUsuario.setPassword(passwordEncoder.encode(randomPassword));
+                nuevoUsuario.setTelefono("empty");
+                nuevoUsuario.setEsStaff(false);
 
-                // Buscar el rol con nombre "Cliente"
-                Optional<Rol> rolOptional = rolRepository.findByNombre("Cliente");  // Cambiar a buscar por nombre
+                // Contraseña aleatoria
+                String randomPassword = UUID.randomUUID().toString();
+                nuevoUsuario.setPassword(randomPassword);
+
+                // Asignar rol "Cliente"
+                Optional<Rol> rolOptional = rolRepository.findByNombre("Cliente");
                 if (rolOptional.isPresent()) {
-                    nuevoUsuario.setRol(rolOptional.get()); //Se le asigna rol de cliente a user que se logea en pantalla principal por primera vez
+                    nuevoUsuario.setRol(rolOptional.get());
                 } else {
                     throw new RuntimeException("El rol 'Cliente' no se encontró en la base de datos.");
                 }
 
-                usuariosRepository.save(nuevoUsuario);
-                
-                //Despues de registrarse se cierra su sesion y se manda a la pantalla de que su registro fue exitoso
-                SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
-                logoutHandler.logout(request, response, authentication);
-                redirectUrl = "/registered.html";
-
+                usuario = usuariosRepository.save(nuevoUsuario);
+            } else {
+                usuario = usuarioOptional.get();
             }
+
+            // Generar JWT
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("role", usuario.getRol().getNombre());
+            String jwt = jwtUtil.generateToken(usuario.getEmail(), claims);
+            
+            
+
+            // Responder con el JWT
+            response.setContentType("application/json");
+            response.getWriter().write("{\"jwt\":\"" + jwt + "\"}");
+            response.setStatus(HttpServletResponse.SC_OK);
         }
-        // Redirigir a la página principal
-        new DefaultRedirectStrategy().sendRedirect(request, response, redirectUrl);
         
     }
 }
+
+
+
