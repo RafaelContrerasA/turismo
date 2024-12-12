@@ -35,7 +35,6 @@ public class PedidoService {
     private final CarritoService carritoService;
     private final FechaReservacionRepository fechaReservacionRepository;
     private final ProductoRepository productoRepository;
-    private final EmailService emailService;
 
     @Transactional
     public Pedido hacerPedido(Long UsuarioId) {
@@ -55,9 +54,6 @@ public class PedidoService {
         
         Pedido pedidoGuardado = pedidoRepository.save(pedido);
         carritoService.eliminarCarrito(carrito.getId());
-        
-        enviarCorreoConfirmacionPedido(pedidoGuardado);
-        
         return pedidoGuardado;
     }
 
@@ -144,23 +140,6 @@ public class PedidoService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         return costoDeReservaciones.add(costoDeProductos);
-    }
-    
-    private void enviarCorreoConfirmacionPedido(Pedido pedido) {
-        PedidoDto pedidoDto = convertirAPedidoDto(pedido);
-        String to = pedido.getUsuario().getEmail();
-        String subject = "Confirmación de Pedido #" + pedido.getId();
-
-        String plainTextBody = "Gracias por su pedido. Detalles:\n" + 
-                                "Fecha: "+pedido.getFecha()+ "\n"+
-                                "Total: "+pedido.getPrecioTotal()+ "\n";
-                                
-        String htmlBody = "<html><body><h1>Gracias por su pedido</h1><p>Detalles:</p>" +
-                                "<p><strong>Fecha:</strong> " + pedido.getFecha() + "</p>" +
-                                "<p><strong>Total:</strong> " + pedido.getPrecioTotal() + "</p>" +
-                                "</body></html>";
-
-        emailService.sendEmail(to, subject, plainTextBody, htmlBody, null);
     }
 
     // Obtener un pedido por su id
