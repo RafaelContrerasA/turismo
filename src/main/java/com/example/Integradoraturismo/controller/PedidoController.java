@@ -2,6 +2,8 @@ package com.example.Integradoraturismo.controller;
 
 import com.example.Integradoraturismo.dto.PedidoDto;
 import com.example.Integradoraturismo.models.Pedido;
+import com.example.Integradoraturismo.models.Usuario;
+import com.example.Integradoraturismo.repository.UsuarioRepository;
 import com.example.Integradoraturismo.response.ApiResponse;
 import com.example.Integradoraturismo.service.PedidoService;
 import com.example.Integradoraturismo.service.UsuarioService;
@@ -23,6 +25,7 @@ public class PedidoController {
 
     private final PedidoService pedidoService;
     private final UsuarioService usuarioService;
+    private final UsuarioRepository usuarioRepository;
 
     /**
      * Crear un nuevo pedido para el usuario autenticado.
@@ -32,6 +35,19 @@ public class PedidoController {
     public ResponseEntity<ApiResponse> crearPedido() {
         try {
             Long usuarioId = usuarioService.obtenerIdUsuarioLogeado();
+            Pedido pedido = pedidoService.hacerPedido(usuarioId);
+            PedidoDto pedidoDto = pedidoService.convertirAPedidoDto(pedido);
+            return ResponseEntity.ok(new ApiResponse("Pedido creado con éxito", pedidoDto));
+        } catch (Exception e) {
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        }
+    }
+    
+    @PostMapping("/invitado")    
+    public ResponseEntity<ApiResponse> crearPedidoInvitado(@RequestParam String email) {
+        try {
+            Usuario usuario = usuarioRepository.findByEmail(email);
+            Long usuarioId = usuario.getId();
             Pedido pedido = pedidoService.hacerPedido(usuarioId);
             PedidoDto pedidoDto = pedidoService.convertirAPedidoDto(pedido);
             return ResponseEntity.ok(new ApiResponse("Pedido creado con éxito", pedidoDto));
