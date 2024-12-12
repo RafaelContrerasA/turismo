@@ -53,6 +53,7 @@ public class CarritoProductoController {
             }
             else if(!usuario.isRegistrado()){
                 usuario.setNombre(nombre);
+                usuario.setTelefono("000000000");
                 usuario = usuarioRepository.save(usuario);
             }
             else{

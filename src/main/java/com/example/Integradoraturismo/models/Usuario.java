@@ -32,7 +32,7 @@ public class Usuario {
     @Column(nullable = true)
     private String password;
 
-    @NotBlank(message = "El teléfono no puede estar vacío.")
+    
     @Column(nullable = true)
     private String telefono;
 

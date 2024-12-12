@@ -59,6 +59,7 @@ public class CarritoFechaReservacionController {
                 else if(!usuario.isRegistrado()){
                     //Nomas por si otra persona no registrada esta usando el mismo user
                     usuario.setNombre(nombre);
+                    usuario.setTelefono("000000000");
                     usuario = usuarioRepository.save(usuario);
                 }
                 else{

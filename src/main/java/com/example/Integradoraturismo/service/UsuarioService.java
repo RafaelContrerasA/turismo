@@ -114,6 +114,7 @@ public class UsuarioService {
         invitado.setEmail(email);
         invitado.setRegistrado(false);
         invitado.setNombre(nombre);
+        invitado.setTelefono("0000000000");
 
         String randomPassword = UUID.randomUUID().toString();
         invitado.setPassword(passwordEncoder.encode(randomPassword));
