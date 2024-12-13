@@ -27,7 +27,7 @@ public class ReviewController {
     private final UsuarioService usuarioService;
 
     // Guardar una nueva Review para un Producto
-    @PreAuthorize("hasRole('CLIENTE')")
+    //@PreAuthorize("hasRole('CLIENTE')")
     @PostMapping("/producto")
     public ResponseEntity<ApiResponse> guardarReviewProducto(@RequestBody ReviewCreateRequestForProducto request) {
         try {
@@ -44,7 +44,7 @@ public class ReviewController {
 
     // Guardar una nueva Review para una Reservación
     @PostMapping("/reservacion")
-    @PreAuthorize("hasRole('CLIENTE')")
+    //@PreAuthorize("hasRole('CLIENTE')")
     public ResponseEntity<ApiResponse> guardarReviewReservacion(@RequestBody ReviewCreateRequestForReservacion request) {
         try {
             Long usuarioId = usuarioService.obtenerIdUsuarioLogeado();
@@ -86,7 +86,7 @@ public class ReviewController {
         }
     }
     
-    @PreAuthorize("hasRole('CLIENTE')")
+    //@PreAuthorize("hasRole('CLIENTE')")
     @GetMapping("/mis-reviews")
     public ResponseEntity<ApiResponse> obtenerReviewsPorUsuarioSesion() {
         try {

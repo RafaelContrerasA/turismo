@@ -48,7 +48,7 @@ public class UsuariosController {
         return ResponseEntity.ok(usuario);
     }
     
-    @PreAuthorize("hasRole('CLIENTE')")
+    //@PreAuthorize("hasRole('CLIENTE')")
     @GetMapping("/usuarios/mis-datos")
     public ResponseEntity<ApiResponse> getUsuarioBySesion() {
         try {

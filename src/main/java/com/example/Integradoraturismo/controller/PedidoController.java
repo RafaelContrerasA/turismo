@@ -30,7 +30,7 @@ public class PedidoController {
     /**
      * Crear un nuevo pedido para el usuario autenticado.
      */
-    @PreAuthorize("hasRole('CLIENTE')")
+    //@PreAuthorize("hasRole('CLIENTE')")
     @PostMapping
     public ResponseEntity<ApiResponse> crearPedido() {
         try {
@@ -59,7 +59,7 @@ public class PedidoController {
     /**
      * Obtener los pedidos del usuario autenticado.
      */
-    @PreAuthorize("hasRole('CLIENTE')")
+    //@PreAuthorize("hasRole('CLIENTE')")
     @GetMapping("/mis-pedidos")
     public ResponseEntity<ApiResponse> obtenerPedidosDelUsuario() {
         try {
@@ -74,7 +74,7 @@ public class PedidoController {
     /**
      * Obtener un pedido por su ID.
      */
-    @PreAuthorize("hasRole('CLIENTE')")
+    //@PreAuthorize("hasRole('CLIENTE')")
     @GetMapping("/{pedidoId}")
     public ResponseEntity<ApiResponse> obtenerPedidoPorId(@PathVariable Long pedidoId) {
         try {
@@ -88,7 +88,7 @@ public class PedidoController {
     /**
      * Obtener todos los pedidos (solo administradores).
      */
-    //@PreAuthorize("hasRole('ADMINISTRADOR')")
+    ////@PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> obtenerTodosLosPedidos() {
         List<PedidoDto> pedidos = pedidoService.obtenerTodosLosPedidos();

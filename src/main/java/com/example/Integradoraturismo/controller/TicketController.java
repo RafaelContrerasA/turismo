@@ -75,7 +75,7 @@ public class TicketController {
     //     return ResponseEntity.notFound().build();
     // }
     
-    //@PreAuthorize("hasRole('EMPRESA')")
+    ////@PreAuthorize("hasRole('EMPRESA')")
     @PatchMapping("/id/cancelar")
     public ResponseEntity<ApiResponse> cancelarTicketPorId(@RequestParam Long id) {        
         try {
@@ -87,7 +87,7 @@ public class TicketController {
         }
     }
     
-    //@PreAuthorize("hasRole('EMPRESA')")
+    ////@PreAuthorize("hasRole('EMPRESA')")
     @PatchMapping("/folio/cancelar")
     public ResponseEntity<ApiResponse> cancelarTicketPorId(@RequestParam String folio) {        
         try {
